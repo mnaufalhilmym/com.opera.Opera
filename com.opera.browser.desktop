@@ -1,0 +1,28 @@
+[Desktop Entry]
+Version=1.0
+Name=Opera
+GenericName=Web browser
+Comment=Fast and secure web browser
+# TryExec=opera
+TryExec=/app/bin/opera
+# Exec=opera %U
+Exec=/app/bin/opera %U
+Terminal=false
+# Icon=opera
+Icon=com.opera.browser
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml_xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;application/x-opera-download;
+Actions=new-window;new-private-window;
+
+[Desktop Action new-window]
+Name=New Window
+# Exec=opera --new-window
+Exec=/app/bin/opera --new-window
+TargetEnvironment=Unity
+
+[Desktop Action new-private-window]
+Name=New Private Window
+# Exec=opera --incognito
+Exec=/app/bin/opera --incognito
+TargetEnvironment=Unity

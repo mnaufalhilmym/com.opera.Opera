@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2017 the Chromium authors, with modifications -->
+<component type="desktop">
+  <id>com.opera.browser</id>
+  <launchable type="desktop-id">com.opera.browser.desktop</launchable>
+  <name>Opera</name>
+  <developer_name>Opera</developer_name>
+  <summary>The web browser from Opera</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LicenseRef-proprietary</project_license>
+  <url type="homepage">https://opera.com/</url>
+  <description>
+    <p>
+    Fast and secure web browser
+   </p>
+   <p>NOTE: This wrapper is not verified by, affiliated with, or supported by Opera.</p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://cdn-production-opera-website.operacdn.com/staticfiles/assets/images/sections/2021/hero-top/download/hero-top--download--desktop.69783645603e.webp</image>
+    </screenshot>
+  </screenshots>
+  <releases>
+    <release version="82.0.4227.23" date="2021-12-02"/>
+  </releases>
+  <content_rating type="oars-1.1">
+  </content_rating>
+  <update_contact>naufal@hilmy.dev</update_contact>
+</component>
