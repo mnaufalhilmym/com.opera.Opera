@@ -135,6 +135,7 @@ modules:
   - name: opera
     buildsystem: simple
     build-commands:
+      - install -Dm 755 opera.sh /app/bin/opera
       - install -Dm 755 apply_extra.sh /app/bin/apply_extra
       - install -Dm 755 stub_sandbox.sh /app/bin/stub_sandbox
       - install -Dm 644 -t /app/etc cobalt.ini
@@ -169,6 +170,8 @@ modules:
         commands:
           - 'echo "Stub sandbox ignoring command: $@"'
           - exit 1
+      - type: file
+        path: opera.sh
       - type: file
         path: apply_extra.sh
       - type: file
