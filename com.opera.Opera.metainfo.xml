@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2017 the Chromium authors, with modifications -->
 <component type="desktop">
-  <id>com.opera.browser</id>
-  <launchable type="desktop-id">com.opera.browser.desktop</launchable>
+  <id>com.opera.Opera</id>
+  <launchable type="desktop-id">com.opera.Opera.desktop</launchable>
   <name>Opera</name>
   <developer_name>Opera</developer_name>
   <summary>The web browser from Opera</summary>

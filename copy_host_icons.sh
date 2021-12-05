@@ -4,5 +4,5 @@
 
 for icon in /usr/share/icons/hicolor/*/apps/opera.png; do
   size=$(echo $icon | grep -Po '\d+x\K\d+')
-  cp $icon com.opera.browser-$size.png
+  cp $icon com.opera.Opera-$size.png
 done

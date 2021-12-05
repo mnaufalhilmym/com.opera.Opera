@@ -1,4 +1,4 @@
-app-id: com.opera.browser
+app-id: com.opera.Opera
 runtime: org.freedesktop.Platform
 runtime-version: '21.08'
 sdk: org.freedesktop.Sdk
@@ -11,6 +11,7 @@ tags:
 finish-args:
   - --device=all
   - --env=GTK_PATH=/app/lib/gtkmodules
+  - --env=CHROME_VERSION_EXTRA=beta
   - --share=ipc
   - --share=network
   - --socket=cups
@@ -24,23 +25,10 @@ finish-args:
   - --talk-name=org.freedesktop.secrets
   - --talk-name=org.gnome.SessionManager
   - --system-talk-name=org.freedesktop.Avahi
-  - --own-name=org.mpris.MediaPlayer2.chromium.*
-  - --filesystem=host-etc
   - --filesystem=xdg-run/pipewire-0
-  - --filesystem=xdg-documents
+  - --own-name=org.mpris.MediaPlayer2.edge.*
   - --filesystem=xdg-download
-  - --filesystem=xdg-music
-  - --filesystem=xdg-videos
-  - --filesystem=xdg-pictures
-  # For GNOME proxy resolution
-  - --filesystem=xdg-run/dconf
-  - --filesystem=~/.config/dconf:ro
-  - --talk-name=ca.desrt.dconf
-  - --env=DCONF_USER_CONFIG_DIR=.config/dconf
-  - --env=GIO_EXTRA_MODULES=/app/lib/gio/modules
-  - --env=GSETTINGS_BACKEND=dconf
-  # For KDE proxy resolution (KDE5 only)
-  - --filesystem=~/.config/kioslaverc
+  - --persist=.pki
 modules:
   - libsecret.json
 
@@ -67,7 +55,8 @@ modules:
       - type: git
         url: https://gitlab.gnome.org/GNOME/gtk.git
         tag: 3.24.23
-      # From https://gitlab.gnome.org/GNOME/gnome-build-meta/-/blob/master/files/gtk3-werror.patch
+        commit: 016e8c55ab924c9ef4d32c8cb06253b1dc1be60d
+       # From https://gitlab.gnome.org/GNOME/gnome-build-meta/-/blob/master/files/gtk3-werror.patch
       - type: patch
         path: gtk3-werror.patch
 
@@ -78,6 +67,7 @@ modules:
     sources:
       - type: file
         path: gtk-settings.ini
+        commit: 14c11c0fe4d366bad4cfecdee97b6652ff9ed63d
 
   - name: zypak
     sources:
@@ -105,32 +95,11 @@ modules:
     sources:
       - type: git
         url: https://github.com/refi64/cobalt
-        tag: v2021.10.1
-        commit: ff38b201b83ca01c112ffc0ed05defdcdfd53e8a
+        tag: v2021.11.1
+        commit: 8a49246a97fcb989b370c20b204324862d79541f
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
-
-  - name: dconf
-    buildsystem: meson
-    config-opts:
-      - -Dbash_completion=false
-      - -Dman=false
-      - -Dvapi=false
-    cleanup:
-      - /etc
-      - /include
-      - ca.desrt.dconf.service
-      - dconf.service
-      - dconf-service
-      - '*.pc'
-    sources:
-      - type: archive
-        url: https://download.gnome.org/sources/dconf/0.40/dconf-0.40.0.tar.xz
-        sha256: cf7f22a4c9200421d8d3325c5c1b8b93a36843650c9f95d6451e20f0bcb24533
-      # From: https://src.fedoraproject.org/rpms/dconf
-      - type: patch
-        path: dconf-override.patch
 
   - name: opera
     buildsystem: simple
@@ -140,57 +109,51 @@ modules:
       - install -Dm 755 stub_sandbox.sh /app/bin/stub_sandbox
       - install -Dm 644 -t /app/etc cobalt.ini
       - install -Dm 644 -t /app/share/flatpak-opera flatpak_policy.json
-      - install -Dm 644 -t /app/share/flatpak-opera first_run.html
-      - install -Dm 644 -t /app/share/applications com.opera.browser.desktop
-      - install -Dm 644 -t /app/share/metainfo com.opera.browser.metainfo.xml
+      - install -Dm 644 -t /app/share/applications com.opera.Opera.desktop
+      - install -Dm 644 -t /app/share/metainfo com.opera.Opera.metainfo.xml
       - |
         for icon in 16 32 48 128 256; do
-          install -Dm 644 com.opera.browser-$icon.png /app/share/icons/hicolor/${icon}x${icon}/apps/com.opera.browser.png
+          install -Dm 644 com.opera.Opera-$icon.png /app/share/icons/hicolor/${icon}x${icon}/apps/com.opera.Opera.png
         done
-
-      # For extra-data to be able to extract the .deb
-      - install -Dm 755 /{usr,app}/bin/ar
-      - cp /usr/lib/$(gcc --print-multiarch)/libbfd-*.so /app/lib
     sources:
       - type: extra-data
         url: https://get.geo.opera.com/pub/opera/desktop/82.0.4227.23/linux/opera-stable_82.0.4227.23_amd64.deb
         sha256: 8c0f1f82544b1f46aa863b03eb96ec89ea6508b0895e07415623c6ac0bbdb124
-        size: 79661088
         filename: opera.deb
-        only-arches: [x86_64]
         x-checker-data:
           type: debian-repo
+          package-name: opera-stable
           root: https://get.geo.opera.com/pub/opera/desktop/
           dist: stable
           component: main
-          package-name: opera-stable
           is-main-source: true
+        size: 79661088
       - type: script
         dest-filename: stub_sandbox.sh
         commands:
           - 'echo "Stub sandbox ignoring command: $@"'
           - exit 1
-      - type: file
-        path: opera.sh
-      - type: file
-        path: apply_extra.sh
+      - type: script
+        dest-filename: opera.sh
+        commands:
+          - exec cobalt "$@"
       - type: file
         path: cobalt.ini
       - type: file
+        path: apply_extra.sh
+      - type: file
         path: flatpak_policy.json
       - type: file
-        path: first_run.html
+        path: com.opera.Opera.desktop
       - type: file
-        path: com.opera.browser.desktop
+        path: com.opera.Opera.metainfo.xml
       - type: file
-        path: com.opera.browser.metainfo.xml
+        path: icons/com.opera.Opera-16.png
       - type: file
-        path: icons/com.opera.browser-16.png
+        path: icons/com.opera.Opera-32.png
       - type: file
-        path: icons/com.opera.browser-32.png
+        path: icons/com.opera.Opera-48.png
       - type: file
-        path: icons/com.opera.browser-48.png
+        path: icons/com.opera.Opera-128.png
       - type: file
-        path: icons/com.opera.browser-128.png
-      - type: file
-        path: icons/com.opera.browser-256.png
+        path: icons/com.opera.Opera-256.png
